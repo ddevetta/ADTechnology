@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\Users\DaveAndTina\Documents\Projects\ailog installation\Application Files\ailog_1_0_0_8\ailog.exe-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{225FF874-4908-47C7-B0B0-17AE09A59D59}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>ailog</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>ADTechnology.AbInitio</RootNamespace>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.5827.22454</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ADTechnology.AbInitio.Apps.AILog.EntryPoint</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Data" />
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Graph" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="OpenHostFileDialog1" />
+    <Reference Include="FtpShell" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\AB_REPORT.cs" />
+    <Compile Include="Classes\CompositeName.cs" />
+    <Compile Include="Classes\ExecutionParameters.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Classes\Flow.cs" />
+    <Compile Include="Classes\FlowList.cs" />
+    <Compile Include="Classes\FlowStatus.cs" />
+    <Compile Include="Classes\Options.cs" />
+    <Compile Include="Classes\Phase.cs" />
+    <Compile Include="Classes\PhaseList.cs" />
+    <Compile Include="Classes\PhaseStatus.cs" />
+    <Compile Include="Classes\InvalidLogFileStreamException.cs" />
+    <Compile Include="Classes\ExpectedNotFoundException.cs" />
+    <Compile Include="Classes\InvalidFormatException.cs" />
+    <Compile Include="Classes\MissingVertexException.cs" />
+    <Compile Include="Classes\PhaseRevision.cs" />
+    <Compile Include="Classes\PhaseRevisionList.cs" />
+    <Compile Include="Classes\PlotLine.cs" />
+    <Compile Include="Classes\Port.cs" />
+    <Compile Include="Classes\PortList.cs" />
+    <Compile Include="Classes\PortDirection.cs" />
+    <Compile Include="Classes\Project.cs" />
+    <Compile Include="Classes\ProjectList.cs" />
+    <Compile Include="Classes\ProjectStatus.cs" />
+    <Compile Include="Classes\VertexStatus.cs" />
+    <Compile Include="Classes\Vertex.cs" />
+    <Compile Include="Classes\VertexList.cs" />
+    <Compile Include="Classes\Generic\SortableBindingList`1.cs" />
+    <Compile Include="Classes\Generic\PropertyComparer`1.cs" />
+    <Compile Include="IO\LogFile.cs" />
+    <Compile Include="IO\ProgressTickEventArgs.cs" />
+    <Compile Include="IO\ProgressTickEventHandler.cs" />
+    <Compile Include="UI\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ExecutionParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\GraphForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Images.cs" />
+    <Compile Include="UI\Mainform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ProjectSource.cs" />
+    <Compile Include="UI\ColorPallette.cs" />
+    <Compile Include="UI\OptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\PhaseControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\AddToPlotterEventArgs.cs" />
+    <Compile Include="UI\AddToPlotterEventHandler.cs" />
+    <Compile Include="UI\ProjectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\StaticDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Apps\AILog\EntryPoint.cs" />
+    <Compile Include="Properties\Resources.cs" />
+    <Compile Include="Properties\Settings.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="UI\AboutForm.resx" />
+    <EmbeddedResource Include="UI\ExecutionParametersForm.resx" />
+    <EmbeddedResource Include="UI\GraphForm.resx" />
+    <EmbeddedResource Include="UI\Images.resx" />
+    <EmbeddedResource Include="UI\Mainform.resx" />
+    <EmbeddedResource Include="UI\OptionsForm.resx" />
+    <EmbeddedResource Include="UI\PhaseControl.resx" />
+    <EmbeddedResource Include="UI\ProjectControl.resx" />
+    <EmbeddedResource Include="UI\StaticDataForm.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

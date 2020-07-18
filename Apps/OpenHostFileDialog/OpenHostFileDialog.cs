@@ -1,0 +1,444 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: ADTechnology.Windows.Controls.OpenHostFileDialog
+// Assembly: OpenHostFileDialog1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e9ef268d26c5f334
+// MVID: F8D282FE-1A5F-453A-946F-DF9521E5E170
+// Assembly location: C:\Users\DaveAndTina\Documents\Projects\ailog installation\Application Files\ailog_1_0_0_7\OpenHostFileDialog1.dll
+
+using ADTechnology.Classes;
+using ADTechnology.Windows.Controls.Properties;
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace ADTechnology.Apps.OpenHostFileDialog
+{
+    public partial class OpenHostFileDialog : Form
+    {
+
+        private HostFile hostfile;
+        private FtpShell fc;
+        private string fileName;
+        private string lastHost = "";
+        private string lastUser = "";
+        private string lastPath = "";
+        private AutoCompleteStringCollection acHosts;
+        private AutoCompleteStringCollection acUsers;
+        private ListViewColumnSorter lvwColumnSorter;
+        private OpenHostFileDialogLocations ohfl;
+
+        public string Host
+        {
+            get
+            {
+                return this.tbHost.Text;
+            }
+            set
+            {
+                this.tbHost.Text = value;
+            }
+        }
+
+        public string User
+        {
+            get
+            {
+                return this.tbUser.Text;
+            }
+            set
+            {
+                this.tbUser.Text = value;
+            }
+        }
+
+        public string Password
+        {
+            get
+            {
+                return this.tbPassword.Text;
+            }
+            set
+            {
+                this.tbPassword.Text = value;
+            }
+        }
+
+        public string FileName
+        {
+            get
+            {
+                return this.fileName;
+            }
+        }
+
+        public HostFile HostFile
+        {
+            get
+            {
+                return this.hostfile;
+            }
+        }
+
+        public FtpShell FTPConnection
+        {
+            get
+            {
+                return this.fc;
+            }
+        }
+
+        public OpenHostFileDialog()
+        {
+            this.InitializeComponent();
+            this.acHosts = new AutoCompleteStringCollection();
+            this.acUsers = new AutoCompleteStringCollection();
+            this.tbHost.AutoCompleteCustomSource = this.acHosts;
+            this.tbUser.AutoCompleteCustomSource = this.acUsers;
+            this.getAutoComplete();
+            this.lvwColumnSorter = new ListViewColumnSorter();
+            this.lvFiles.ListViewItemSorter = (IComparer)this.lvwColumnSorter;
+        }
+
+        public long OpenStream()
+        {
+            if (this.fc == null)
+                throw new Exception("Not connected.");
+            return this.fc.OpenStream(this.fileName);
+        }
+
+        public void CloseStream()
+        {
+            this.fc.CloseStream();
+        }
+
+        private void getAutoComplete()
+        {
+            if (Settings.Default.Hosts != null)
+            {
+                string[] array = new string[Settings.Default.Hosts.Count];
+                Settings.Default.Hosts.CopyTo(array, 0);
+                this.acHosts.AddRange(array);
+            }
+            if (Settings.Default.Users == null)
+                return;
+            string[] array1 = new string[Settings.Default.Users.Count];
+            Settings.Default.Users.CopyTo(array1, 0);
+            this.acUsers.AddRange(array1);
+        }
+
+        private void tbHost_Validating(object sender, CancelEventArgs e)
+        {
+            if (this.tbHost.Text.Trim() == "")
+            {
+                this.epHost.SetError((Control)sender, "Enter host name.");
+                this.tbHost.Select();
+                e.Cancel = true;
+            }
+            else
+            {
+                this.epHost.Clear();
+                e.Cancel = false;
+            }
+        }
+
+        private void tbUser_Validating(object sender, CancelEventArgs e)
+        {
+            if (this.tbUser.Text.Trim() == "")
+            {
+                this.epUser.SetError((Control)sender, "Enter user name, or 'anonymous' if the host accepts anonymous connections.");
+                this.tbUser.Select();
+                e.Cancel = true;
+            }
+            else
+            {
+                this.epUser.Clear();
+                e.Cancel = false;
+            }
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if (!this.ValidateChildren(ValidationConstraints.Enabled | ValidationConstraints.ImmediateChildren))
+                return;
+
+            if (this.connect(this.tbHost.Text, this.tbUser.Text, this.tbPassword.Text))
+                this.dir();
+        }
+
+        private bool connect()
+        {
+            return this.connect(tbHost.Text, tbUser.Text, tbPassword.Text);
+        }
+
+        private bool connect(string host, string user, string password)
+        {
+            this.hostfile = new HostFile();
+            this.fc = new FtpShell();
+            this.lvFiles.SelectedIndices.Clear();
+            this.lvFiles.Items.Clear();
+
+            this.lblPath.Enabled = this.tbPath.Enabled = this.lblFile.Enabled = this.tbFile.Enabled = this.btnRefresh.Enabled = this.btnCdup.Enabled = this.lvFiles.Enabled = false ;
+
+            this.tellThem("Connecting...");
+            try
+            {
+                this.fc.Connect(host, user, password);
+            }
+            catch (Exception ex)
+            {
+                this.fc.Disconnect();
+                this.tellThem("Connection failed.");
+                MessageBox.Show((IWin32Window)this, ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return this.fc.IsConnected;
+            }
+
+            if ((host == this.lastHost && user == this.lastUser)
+                && this.tbPath.Text.Length > 0)
+                this.chdir(this.tbPath.Text);
+            else
+                this.tbPath.Text = this.pwd();
+
+            this.lblPath.Enabled = this.tbPath.Enabled = this.lblFile.Enabled = this.tbFile.Enabled = this.btnRefresh.Enabled = this.btnCdup.Enabled = this.lvFiles.Enabled = true;
+            
+            if (!this.acHosts.Contains(this.tbHost.Text))
+            {
+                this.acHosts.Add(this.tbHost.Text);
+                Settings.Default.Hosts.Add(this.tbHost.Text);
+            }
+            if (!this.acUsers.Contains(this.tbUser.Text))
+            {
+                this.acUsers.Add(this.tbUser.Text);
+                Settings.Default.Users.Add(this.tbUser.Text);
+            }
+            this.lastHost = this.hostfile.Host = this.tbHost.Text;
+            this.lastUser = this.tbUser.Text;
+
+            Cursor.Current = Cursors.Default;
+            return this.fc.IsConnected;
+        }
+
+        private void dir()
+        {
+            this.lvFiles.SelectedIndices.Clear();
+            this.lvFiles.Items.Clear();
+            this.btnOpen.Enabled = false;
+            this.tellThem("Retrieving directory listing...");
+            ArrayList arrayList;
+            try
+            {
+                arrayList = this.fc.List();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show((IWin32Window)this, "Error retrieving directory information : " + ex.Message + "\r\n\r\n" + ex.StackTrace, "FTP Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            foreach (string[] items in arrayList)
+                this.lvFiles.Items.Add(new ListViewItem(items)
+                {
+                    ImageIndex = !(items[3] == "D") ? (!(items[3] == "L") ? -1 : 1) : 0
+                });
+            lvFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+            if (lvFiles.Columns[0].Width < this.Width / 3)
+                lvFiles.Columns[0].Width = this.Width / 3;
+
+            this.lastPath = this.tbPath.Text = this.pwd();
+            this.tbFile.Text = "";
+            this.tellThem(this.tbUser.Text + "@" + this.tbHost.Text + " (" + this.fc.ServerVersion + ")");
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void chdir(string dir)
+        {
+            try
+            {
+                this.fc.ChangeDir(dir);
+            }
+            catch (Exception ex)
+            {
+                if (!this.fc.IsConnected)
+                {
+                    if (this.connect())
+                        this.chdir(dir);
+                    return;
+                }
+                MessageBox.Show(ex.Message, "Error");
+                return;
+            }
+            this.dir();
+        }
+
+        private void cdup()
+        {
+            try
+            {
+                this.fc.CdUp();
+            }
+            catch
+            {
+                if (!this.fc.IsConnected)
+                {
+                    if (this.connect())
+                        this.cdup();
+                }
+                return;
+            }
+            this.dir();
+        }
+
+        private string pwd()
+        {
+            string dir = null;
+            try
+            {
+                dir = this.fc.GetWorkingDirectory();
+            }
+            catch (Exception ex)
+            {
+                if (!this.fc.IsConnected)
+                {
+                    if (this.connect())
+                        dir = this.pwd();
+                    return dir;
+                }
+                MessageBox.Show((IWin32Window)this, "Error retrieving current working directory : " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            return dir;
+        }
+
+        private void OpenHostFileDialog_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.fc != null)
+            {
+                this.tellThem("Closing connection...");
+                try
+                {
+                    this.fc.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + ex.StackTrace);
+                }
+            }
+            this.saveAutoCorrect();
+        }
+
+        private void saveAutoCorrect()
+        {
+            Settings.Default.Save();
+        }
+
+        private void lvFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.lvFiles.SelectedIndices.Count < 1)
+                return;
+            if (this.lvFiles.SelectedItems[0].SubItems[3].Text == "F")
+                this.tbFile.Text = this.lvFiles.SelectedItems[0].Text;
+            this.btnOpen.Enabled = true;
+            this.AcceptButton = (IButtonControl)this.btnOpen;
+        }
+
+        private void lvFiles_DoubleClick(object sender, EventArgs e)
+        {
+            this.btnOpen_Click(sender, e);
+        }
+
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            if (this.lvFiles.SelectedIndices.Count < 1 && this.tbFile.Text.Trim() == "")
+                return;
+            if (this.lvFiles.SelectedIndices.Count > 0)
+            {
+                switch (this.lvFiles.SelectedItems[0].SubItems[3].Text)
+                { 
+                    case "D":
+                        this.chdir(this.lvFiles.SelectedItems[0].Text);
+                        break;
+                    case "F":
+                        this.hostfile.Path = this.tbPath.Text;
+                        this.hostfile.FileName = this.tbFile.Text;
+                        this.fileName = this.tbPath.Text + (this.tbPath.Text.Length > 0 ? this.tbPath.Text.Substring(0, 1) : "") + this.tbFile.Text;
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                        break;
+                    default:
+                        return;
+                }
+            }
+        }
+
+        private void tbHost_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = (IButtonControl)this.btnConnect;
+        }
+
+        private void btnCdup_Click(object sender, EventArgs e)
+        {
+            this.cdup();
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            this.chdir(this.tbPath.Text);
+        }
+
+        private void tbPath_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = (IButtonControl)this.btnRefresh;
+        }
+
+        private string tellThem(string stuff)
+        {
+            string text = this.toolStripStatus.Text;
+            this.toolStripStatus.Text = stuff;
+            Application.DoEvents();
+            Cursor.Current = Cursors.WaitCursor;
+            return text;
+        }
+
+        private void lvFiles_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (this.lvwColumnSorter.SortColumn > -1)
+                this.lvFiles.Columns[this.lvwColumnSorter.SortColumn].ImageIndex = -1;
+            if (e.Column == this.lvwColumnSorter.SortColumn)
+            {
+                if (this.lvwColumnSorter.Order == SortOrder.Ascending)
+                {
+                    this.lvwColumnSorter.Order = SortOrder.Descending;
+                    this.lvFiles.Columns[e.Column].ImageIndex = 3;
+                }
+                else
+                {
+                    this.lvwColumnSorter.Order = SortOrder.Ascending;
+                    this.lvFiles.Columns[e.Column].ImageIndex = 2;
+                }
+            }
+            else
+            {
+                this.lvwColumnSorter.SortColumn = e.Column;
+                this.lvwColumnSorter.Order = SortOrder.Ascending;
+                this.lvFiles.Columns[e.Column].ImageIndex = 2;
+            }
+            this.lvFiles.Sort();
+        }
+
+        private void btnLocs_Click(object sender, EventArgs e)
+        {
+            if (this.ohfl == null)
+                this.ohfl = new OpenHostFileDialogLocations();
+            this.ohfl.Host = this.tbHost.Text;
+            this.ohfl.User = this.tbUser.Text;
+            this.ohfl.Pass = this.tbPassword.Text;
+            this.ohfl.Path = this.tbPath.Text;
+            if (this.ohfl.ShowDialog((IWin32Window)this) != DialogResult.OK)
+                return;
+            this.lastHost = this.tbHost.Text = this.ohfl.Host;
+            this.lastUser = this.tbUser.Text = this.ohfl.User;
+            this.tbPassword.Text = this.ohfl.Pass;
+            this.tbPath.Text = this.ohfl.Path;
+            if (this.connect(this.ohfl.Host, this.ohfl.User, this.ohfl.Pass))
+                this.dir();
+        }
+    }
+}
