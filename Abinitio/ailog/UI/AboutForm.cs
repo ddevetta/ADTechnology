@@ -218,7 +218,7 @@ namespace ADTechnology.AbInitio.UI
       this.HelpButton = true;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
-      this.Name = nameof (AboutForm);
+      this.Name = "AboutForm";
       this.ShowIcon = false;
       this.ShowInTaskbar = false;
       this.Text = "About";

@@ -4,7 +4,7 @@
 // MVID: 579C0A01-7810-4FA2-81F0-9D716001FCE7
 // Assembly location: C:\Users\DaveAndTina\Documents\Projects\ailog installation\Application Files\ailog_1_0_0_8\ailog.exe
 
-using ADTechnology.Apps;
+using ADTechnology.Apps.Graph;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -73,49 +73,69 @@ namespace ADTechnology.AbInitio.UI
 
     private void InitializeComponent()
     {
-      ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof (GraphForm));
-      this.splitContainer1 = new SplitContainer();
-      this.graph = new GraphControl();
-      this.lbLines = new ListBox();
-      this.splitContainer1.Panel1.SuspendLayout();
-      this.splitContainer1.Panel2.SuspendLayout();
-      this.splitContainer1.SuspendLayout();
-      this.SuspendLayout();
-      this.splitContainer1.Dock = DockStyle.Fill;
-      this.splitContainer1.Location = new Point(0, 0);
-      this.splitContainer1.Name = "splitContainer1";
-      this.splitContainer1.Orientation = Orientation.Horizontal;
-      this.splitContainer1.Panel1.Controls.Add((Control) this.graph);
-      this.splitContainer1.Panel2.AutoScroll = true;
-      this.splitContainer1.Panel2.Controls.Add((Control) this.lbLines);
-      this.splitContainer1.Size = new Size(700, 598);
-      this.splitContainer1.SplitterDistance = 500;
-      this.splitContainer1.TabIndex = 0;
-      this.graph.BackColor = Color.Linen;
-      this.graph.Dock = DockStyle.Fill;
-      this.graph.Location = new Point(0, 0);
-      this.graph.Name = "graph";
-      this.graph.SelectedGraphLineIndex = -1;
-      this.graph.Size = new Size(700, 500);
-      this.graph.TabIndex = 1;
-      this.lbLines.Dock = DockStyle.Fill;
-      this.lbLines.DrawMode = DrawMode.OwnerDrawFixed;
-      this.lbLines.FormattingEnabled = true;
-      this.lbLines.Location = new Point(0, 0);
-      this.lbLines.Name = "lbLines";
-      this.lbLines.Size = new Size(700, 82);
-      this.lbLines.TabIndex = 0;
-      this.AutoScaleDimensions = new SizeF(6f, 13f);
-      this.AutoScaleMode = AutoScaleMode.Font;
-      this.ClientSize = new Size(700, 598);
-      this.Controls.Add((Control) this.splitContainer1);
-      this.Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
-      this.Name = nameof (GraphForm);
-      this.Text = "Plotter";
-      this.splitContainer1.Panel1.ResumeLayout(false);
-      this.splitContainer1.Panel2.ResumeLayout(false);
-      this.splitContainer1.ResumeLayout(false);
-      this.ResumeLayout(false);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GraphForm));
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.graph = new ADTechnology.Apps.Graph.GraphControl();
+            this.lbLines = new System.Windows.Forms.ListBox();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.graph);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.AutoScroll = true;
+            this.splitContainer1.Panel2.Controls.Add(this.lbLines);
+            this.splitContainer1.Size = new System.Drawing.Size(907, 679);
+            this.splitContainer1.SplitterDistance = 567;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // graph
+            // 
+            this.graph.BackColor = System.Drawing.Color.Linen;
+            this.graph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.graph.Location = new System.Drawing.Point(0, 0);
+            this.graph.Name = "graph";
+            this.graph.SelectedGraphLineIndex = -1;
+            this.graph.SingleScale = false;
+            this.graph.Size = new System.Drawing.Size(907, 567);
+            this.graph.TabIndex = 1;
+            // 
+            // lbLines
+            // 
+            this.lbLines.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbLines.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.lbLines.FormattingEnabled = true;
+            this.lbLines.Location = new System.Drawing.Point(0, 0);
+            this.lbLines.Name = "lbLines";
+            this.lbLines.Size = new System.Drawing.Size(907, 108);
+            this.lbLines.TabIndex = 0;
+            // 
+            // GraphForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(907, 679);
+            this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "GraphForm";
+            this.Text = "Plotter";
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
+            this.ResumeLayout(false);
+
     }
   }
 }

@@ -6,12 +6,13 @@
 
 namespace ADTechnology.AbInitio.Classes
 {
-  internal enum PhaseStatus
-  {
-    NotStarted,
-    Started,
-    Running,
-    Ended,
-    Error,
-  }
+    internal enum PhaseStatus
+    {
+        NotStarted,
+        Started,
+        Running,
+        Ended,
+        Error,
+        Total
+    }
 }

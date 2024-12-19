@@ -7,7 +7,8 @@
 using System;
 using System.Collections;
 using System.IO;
-using System.Net.NetworkInformation;
+using System.Threading;
+
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
 
@@ -18,6 +19,7 @@ namespace ADTechnology.Classes
         private FtpShell.OSType ostype = FtpShell.OSType.Unknown;
         private PasswordConnectionInfo conn;
         private SftpClient client;
+        private SftpDownloadAsyncResult async = null;
         private MemoryStream dataStream;
         public int port = 22;
 
@@ -81,6 +83,11 @@ namespace ADTechnology.Classes
             }
         }
 
+        public SftpDownloadAsyncResult AsyncResult
+        {
+            get { return async; }
+        }
+
         public FtpShell()
         {
         }
@@ -105,7 +112,12 @@ namespace ADTechnology.Classes
             if (!this.IsConnected)
                 return 0;
             this.dataStream = new MemoryStream();
-            this.client.DownloadFile(file, (Stream)this.dataStream);
+            this.async = (SftpDownloadAsyncResult)this.client.BeginDownloadFile(file, (Stream)this.dataStream);
+            while (!async.IsCompleted)
+            {
+                System.Console.WriteLine(async.DownloadedBytes.ToString());
+                Thread.Sleep(200);
+            }
             this.dataStream.Seek(0L, SeekOrigin.Begin);
             return this.dataStream.Length;
         }

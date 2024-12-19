@@ -10,14 +10,14 @@ using System.Windows.Forms;
 
 namespace ADTechnology.AbInitio.Apps.AILog
 {
-  internal static class EntryPoint
-  {
-    [STAThread]
-    private static void Main(string[] args)
+    internal static class EntryPoint
     {
-      Application.EnableVisualStyles();
-      Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(args.Length != 0 ? (Form) new Mainform(args[0]) : (Form) new Mainform());
+        [STAThread]
+        private static void Main(string[] args)
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(args.Length != 0 ? new MainForm(args[0]) : new MainForm());
+        }
     }
-  }
 }

@@ -38,7 +38,7 @@ namespace ADTechnology.Apps.Graph
       this.AutoScaleDimensions = new SizeF(6f, 13f);
       this.AutoScaleMode = AutoScaleMode.Font;
       this.BackColor = Color.Linen;
-      this.Name = nameof (GraphControl);
+      this.Name = "GraphControl";
       this.Size = new Size(680, 500);
       this.MouseDown += new MouseEventHandler(this.GraphControl_MouseDown);
       this.KeyDown += new KeyEventHandler(this.GraphControl_KeyDown);

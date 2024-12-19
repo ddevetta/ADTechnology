@@ -9,7 +9,7 @@
     <AssemblyName>Graph</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <RootNamespace>ADTechnology.Windows.Controls</RootNamespace>
+    <RootNamespace>ADTechnology.Apps.Graph</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

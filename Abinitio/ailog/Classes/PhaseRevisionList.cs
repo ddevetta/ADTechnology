@@ -8,28 +8,31 @@ using System.Collections;
 
 namespace ADTechnology.AbInitio.Classes
 {
-  internal class PhaseRevisionList : CollectionBase
-  {
-    public PhaseRevision this[int index]
+    internal class PhaseRevisionList : CollectionBase
     {
-      get
-      {
-        return (PhaseRevision) this.List[index];
-      }
-      set
-      {
-        this.List[index] = (object) value;
-      }
-    }
+        public PhaseRevision this[int index]
+        {
+            get
+            {
+                return (PhaseRevision)this.List[index];
+            }
+            set
+            {
+                this.List[index] = (object)value;
+            }
+        }
 
-    public void Add(PhaseRevision PhaseRevision)
-    {
-      this.List.Insert(0, (object) PhaseRevision);
-    }
+        public void Add(PhaseRevision PhaseRevision)
+        {
+            if (this.List.Count > 0)
+                this.List.Insert(1, PhaseRevision);     // Preserve slot 0 for the total revision
+            else
+                this.List.Add(PhaseRevision);
+        }
 
-    public void Remove(PhaseRevision PhaseRevision)
-    {
-      this.List.Remove((object) PhaseRevision);
+        public void Remove(PhaseRevision PhaseRevision)
+        {
+            this.List.Remove(PhaseRevision);
+        }
     }
-  }
 }

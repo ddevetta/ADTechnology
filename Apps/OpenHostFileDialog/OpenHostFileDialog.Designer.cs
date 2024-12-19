@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace ADTechnology.Apps.OpenHostFileDialog
 {
-    public partial class OpenHostFileDialog 
+    public partial class OpenHostFileDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -34,7 +34,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
         private TextBox tbUser;
         private Label label2;
         private TextBox tbPassword;
-        private Label label3;   
+        private Label label3;
         private Button btnConnect;
         private Label lblPath;
         private TextBox tbPath;
@@ -90,12 +90,12 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.colFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFileType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colModifiedSorter = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.btnRefresh = new System.Windows.Forms.Button();
             this.lblFile = new System.Windows.Forms.Label();
             this.tbFile = new System.Windows.Forms.TextBox();
             this.btnLocs = new System.Windows.Forms.Button();
-            this.colModifiedSorter = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.epHost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.epUser)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -109,7 +109,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.tbHost.Name = "tbHost";
             this.tbHost.Size = new System.Drawing.Size(160, 20);
             this.tbHost.TabIndex = 0;
-            this.tbHost.TextChanged += new System.EventHandler(this.tbHost_TextChanged);
+            this.tbHost.TextChanged += new System.EventHandler(this._host_TextChanged);
             this.tbHost.Validating += new System.ComponentModel.CancelEventHandler(this.tbHost_Validating);
             // 
             // label1
@@ -129,6 +129,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.tbUser.Name = "tbUser";
             this.tbUser.Size = new System.Drawing.Size(100, 20);
             this.tbUser.TabIndex = 1;
+            this.tbUser.TextChanged += new System.EventHandler(this._host_TextChanged);
             this.tbUser.Validating += new System.ComponentModel.CancelEventHandler(this.tbUser_Validating);
             // 
             // label2
@@ -147,6 +148,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.tbPassword.Size = new System.Drawing.Size(100, 20);
             this.tbPassword.TabIndex = 2;
             this.tbPassword.UseSystemPasswordChar = true;
+            this.tbPassword.TextChanged += new System.EventHandler(this._host_TextChanged);
             // 
             // label3
             // 
@@ -180,7 +182,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             // 
             // tbPath
             // 
-            this.tbPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tbPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbPath.Enabled = false;
             this.tbPath.Location = new System.Drawing.Point(89, 102);
@@ -258,8 +260,8 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             // 
             // lvFiles
             // 
-            this.lvFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.lvFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colFileName,
@@ -279,7 +281,9 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.lvFiles.View = System.Windows.Forms.View.Details;
             this.lvFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvFiles_ColumnClick);
             this.lvFiles.SelectedIndexChanged += new System.EventHandler(this.lvFiles_SelectedIndexChanged);
+            this.lvFiles.Click += new System.EventHandler(this.lvFiles_Click);
             this.lvFiles.DoubleClick += new System.EventHandler(this.lvFiles_DoubleClick);
+            this.lvFiles.Resize += new System.EventHandler(this.lvFiles_Resize);
             // 
             // colFileName
             // 
@@ -301,6 +305,11 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             // 
             this.colFileType.Text = "Type";
             this.colFileType.Width = 0;
+            // 
+            // colModifiedSorter
+            // 
+            this.colModifiedSorter.Text = "ModSort";
+            this.colModifiedSorter.Width = 0;
             // 
             // imageList
             // 
@@ -337,13 +346,14 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             // 
             // tbFile
             // 
-            this.tbFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.tbFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFile.Enabled = false;
             this.tbFile.Location = new System.Drawing.Point(89, 482);
             this.tbFile.Name = "tbFile";
             this.tbFile.Size = new System.Drawing.Size(600, 20);
             this.tbFile.TabIndex = 24;
+            this.tbFile.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbFile_KeyUp);
             // 
             // btnLocs
             // 
@@ -356,11 +366,6 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.btnLocs.Text = "Locations...";
             this.btnLocs.UseVisualStyleBackColor = true;
             this.btnLocs.Click += new System.EventHandler(this.btnLocs_Click);
-            // 
-            // colModifiedSorter
-            // 
-            this.colModifiedSorter.Text = "ModSort";
-            this.colModifiedSorter.Width = 0;
             // 
             // OpenHostFileDialog
             // 
@@ -395,6 +400,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "Open from Host";
+            this.Activated += new System.EventHandler(this.OpenHostFileDialog_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OpenHostFileDialog_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.epHost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.epUser)).EndInit();

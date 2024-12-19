@@ -7,9 +7,9 @@
     <ProjectGuid>{3A8DC49F-69B3-431F-B320-D47037DE0807}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>OpenHostFileDialog</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <RootNamespace>ADTechnology.Windows.Controls</RootNamespace>
+    <RootNamespace>ADTechnology.Apps.OpenHostFileDialog</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

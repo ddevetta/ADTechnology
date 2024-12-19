@@ -51,7 +51,7 @@ namespace ADTechnology.AbInitio.UI
     {
       this.components = (IContainer) new Container();
       DataGridViewCellStyle gridViewCellStyle = new DataGridViewCellStyle();
-      ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof (ExecutionParametersForm));
+      ComponentResourceManager resources = new ComponentResourceManager(typeof (ExecutionParametersForm));
       this.dgMain = new DataGridView();
       this.Parameter = new DataGridViewTextBoxColumn();
       this.ParameterValue = new DataGridViewTextBoxColumn();
@@ -104,7 +104,7 @@ namespace ADTechnology.AbInitio.UI
       });
       this.contextMenu.Name = "contextMenu";
       this.contextMenu.Size = new Size(111, 26);
-      this.copyToolStripMenuItem.Image = (Image) componentResourceManager.GetObject("copyToolStripMenuItem.Image");
+      this.copyToolStripMenuItem.Image = (Image) resources.GetObject("copyToolStripMenuItem.Image");
       this.copyToolStripMenuItem.ImageTransparentColor = Color.White;
       this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
       this.copyToolStripMenuItem.Size = new Size(110, 22);
@@ -114,8 +114,8 @@ namespace ADTechnology.AbInitio.UI
       this.AutoScaleMode = AutoScaleMode.Font;
       this.ClientSize = new Size(942, 544);
       this.Controls.Add((Control) this.dgMain);
-      this.Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
-      this.Name = nameof (ExecutionParametersForm);
+      this.Icon = (Icon) resources.GetObject("$this.Icon");
+      this.Name = "ExecutionParametersForm";
       this.Text = "Execution Parameters";
       ((ISupportInitialize) this.dgMain).EndInit();
       this.contextMenu.ResumeLayout(false);

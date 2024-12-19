@@ -9,7 +9,7 @@ using ADTechnology.Windows.Controls.Properties;
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Drawing;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace ADTechnology.Apps.OpenHostFileDialog
@@ -27,6 +27,12 @@ namespace ADTechnology.Apps.OpenHostFileDialog
         private AutoCompleteStringCollection acUsers;
         private ListViewColumnSorter lvwColumnSorter;
         private OpenHostFileDialogLocations ohfl;
+        private bool keepConnectionOpen = true;
+
+        ArrayList fileArray;
+        string selFile = "";
+
+        System.Timers.Timer oneShotTimer;
 
         public string Host
         {
@@ -88,6 +94,18 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             }
         }
 
+        public bool KeppConnectionOpen
+        {
+            get
+            {
+                return this.keepConnectionOpen;
+            }
+            set
+            {
+                this.keepConnectionOpen = value;
+            }
+        }
+
         public OpenHostFileDialog()
         {
             this.InitializeComponent();
@@ -96,8 +114,16 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.tbHost.AutoCompleteCustomSource = this.acHosts;
             this.tbUser.AutoCompleteCustomSource = this.acUsers;
             this.getAutoComplete();
+
             this.lvwColumnSorter = new ListViewColumnSorter();
             this.lvFiles.ListViewItemSorter = (IComparer)this.lvwColumnSorter;
+            this.lvwColumnSorter.SortColumn = 2;                // Default to Modified date...
+            this.lvwColumnSorter.Order = SortOrder.Descending;  // .. descending
+            this.lvFiles.Columns[2].ImageIndex = 3;
+
+            oneShotTimer = new System.Timers.Timer(500);
+            oneShotTimer.AutoReset = false;
+            oneShotTimer.Elapsed += new ElapsedEventHandler(OnTimedKeyUp);
         }
 
         public long OpenStream()
@@ -162,8 +188,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             if (!this.ValidateChildren(ValidationConstraints.Enabled | ValidationConstraints.ImmediateChildren))
                 return;
 
-            if (this.connect(this.tbHost.Text, this.tbUser.Text, this.tbPassword.Text))
-                this.dir();
+            this.connect();
         }
 
         private bool connect()
@@ -178,7 +203,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.lvFiles.SelectedIndices.Clear();
             this.lvFiles.Items.Clear();
 
-            this.lblPath.Enabled = this.tbPath.Enabled = this.lblFile.Enabled = this.tbFile.Enabled = this.btnRefresh.Enabled = this.btnCdup.Enabled = this.lvFiles.Enabled = false ;
+            this.lblPath.Enabled = this.tbPath.Enabled = this.lblFile.Enabled = this.tbFile.Enabled = this.btnRefresh.Enabled = this.btnCdup.Enabled = this.lvFiles.Enabled = false;
 
             this.tellThem("Connecting...");
             try
@@ -193,14 +218,13 @@ namespace ADTechnology.Apps.OpenHostFileDialog
                 return this.fc.IsConnected;
             }
 
-            if ((host == this.lastHost && user == this.lastUser)
-                && this.tbPath.Text.Length > 0)
+            if (this.tbPath.Text.Length > 0)
                 this.chdir(this.tbPath.Text);
             else
                 this.tbPath.Text = this.pwd();
 
             this.lblPath.Enabled = this.tbPath.Enabled = this.lblFile.Enabled = this.tbFile.Enabled = this.btnRefresh.Enabled = this.btnCdup.Enabled = this.lvFiles.Enabled = true;
-            
+
             if (!this.acHosts.Contains(this.tbHost.Text))
             {
                 this.acHosts.Add(this.tbHost.Text);
@@ -221,24 +245,20 @@ namespace ADTechnology.Apps.OpenHostFileDialog
         private void dir()
         {
             this.lvFiles.SelectedIndices.Clear();
-            this.lvFiles.Items.Clear();
             this.btnOpen.Enabled = false;
             this.tellThem("Retrieving directory listing...");
-            ArrayList arrayList;
             try
             {
-                arrayList = this.fc.List();
+                this.fileArray = this.fc.List();
             }
             catch (Exception ex)
             {
                 MessageBox.Show((IWin32Window)this, "Error retrieving directory information : " + ex.Message + "\r\n\r\n" + ex.StackTrace, "FTP Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            foreach (string[] items in arrayList)
-                this.lvFiles.Items.Add(new ListViewItem(items)
-                {
-                    ImageIndex = !(items[3] == "D") ? (!(items[3] == "L") ? -1 : 1) : 0
-                });
+
+            filter("");
+
             lvFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             if (lvFiles.Columns[0].Width < this.Width / 3)
                 lvFiles.Columns[0].Width = this.Width / 3;
@@ -247,6 +267,52 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             this.tbFile.Text = "";
             this.tellThem(this.tbUser.Text + "@" + this.tbHost.Text + " (" + this.fc.ServerVersion + ")");
             Cursor.Current = Cursors.Default;
+        }
+
+        private delegate void filterDelegate(string filterText);
+
+        private void filter(string filterText)
+        {
+            this.lvFiles.SuspendLayout();
+            this.lvFiles.Items.Clear();
+            this.lvFiles.SelectedIndexChanged -= new System.EventHandler(this.lvFiles_SelectedIndexChanged);
+
+            object[] parms = new object[]
+            {
+                this.lvFiles, this.fileArray, filterText, this.selFile, this.btnOpen
+            };
+
+            updateListDelegate call = new updateListDelegate(updateList);
+            this.lvFiles.BeginInvoke(call, parms);
+        }
+
+        private delegate void updateListDelegate(ListView lv, ArrayList fileList, string filterText, string selectedFile, Button openButton);
+
+        public void updateList(ListView lv, ArrayList fileList, string filterText, string selectedFile, Button openButton)
+        {
+            ListViewItem added;
+            System.Diagnostics.Debug.WriteLine("UpdateList");
+            openButton.Enabled = false;
+            for (int x = 0; x < fileArray.Count; x++)
+            {
+                string[] items = (string[])fileList[x];
+                if (filterText == ""                    // Blank filter...
+                    || items[0].Contains(filterText))   // ... or filename contains filter text
+                {
+                    added = lv.Items.Add(new ListViewItem(items));
+                    added.ImageIndex = !(items[3] == "D") ? (!(items[3] == "L") ? -1 : 1) : 0;
+                    if (selectedFile == items[0])
+                    {
+                        added.Selected = true;
+                        if (items[0] == filterText)
+                            openButton.Enabled = true;
+                    }
+                }
+            }
+
+            if (lv.SelectedIndices.Count > 0)
+                lv.EnsureVisible(lv.SelectedIndices[0]);
+            lv.SelectedIndexChanged += new System.EventHandler(this.lvFiles_SelectedIndexChanged);
         }
 
         private void chdir(string dir)
@@ -309,7 +375,9 @@ namespace ADTechnology.Apps.OpenHostFileDialog
 
         private void OpenHostFileDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.fc != null)
+            if (!this.keepConnectionOpen
+                && this.fc != null
+                && this.fc.IsConnected)
             {
                 this.tellThem("Closing connection...");
                 try
@@ -331,12 +399,19 @@ namespace ADTechnology.Apps.OpenHostFileDialog
 
         private void lvFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            this.selFile = "";
             if (this.lvFiles.SelectedIndices.Count < 1)
                 return;
             if (this.lvFiles.SelectedItems[0].SubItems[3].Text == "F")
-                this.tbFile.Text = this.lvFiles.SelectedItems[0].Text;
+                this.tbFile.Text = this.selFile = this.lvFiles.SelectedItems[0].Text;
             this.btnOpen.Enabled = true;
             this.AcceptButton = (IButtonControl)this.btnOpen;
+        }
+
+        private void lvFiles_Click(object sender, EventArgs e)
+        {
+            if (this.lvFiles.SelectedItems.Count > 0)
+                this.tbFile.Text = lvFiles.SelectedItems[0].SubItems[0].Text;
         }
 
         private void lvFiles_DoubleClick(object sender, EventArgs e)
@@ -351,7 +426,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             if (this.lvFiles.SelectedIndices.Count > 0)
             {
                 switch (this.lvFiles.SelectedItems[0].SubItems[3].Text)
-                { 
+                {
                     case "D":
                         this.chdir(this.lvFiles.SelectedItems[0].Text);
                         break;
@@ -368,7 +443,7 @@ namespace ADTechnology.Apps.OpenHostFileDialog
             }
         }
 
-        private void tbHost_TextChanged(object sender, EventArgs e)
+        private void _host_TextChanged(object sender, EventArgs e)
         {
             this.AcceptButton = (IButtonControl)this.btnConnect;
         }
@@ -400,7 +475,10 @@ namespace ADTechnology.Apps.OpenHostFileDialog
         private void lvFiles_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             if (this.lvwColumnSorter.SortColumn > -1)
+            {
                 this.lvFiles.Columns[this.lvwColumnSorter.SortColumn].ImageIndex = -1;
+                this.lvFiles.Columns[this.lvwColumnSorter.SortColumn].ImageKey = null;
+            }
             if (e.Column == this.lvwColumnSorter.SortColumn)
             {
                 if (this.lvwColumnSorter.Order == SortOrder.Ascending)
@@ -427,18 +505,54 @@ namespace ADTechnology.Apps.OpenHostFileDialog
         {
             if (this.ohfl == null)
                 this.ohfl = new OpenHostFileDialogLocations();
+
             this.ohfl.Host = this.tbHost.Text;
             this.ohfl.User = this.tbUser.Text;
             this.ohfl.Pass = this.tbPassword.Text;
             this.ohfl.Path = this.tbPath.Text;
-            if (this.ohfl.ShowDialog((IWin32Window)this) != DialogResult.OK)
+
+            if (this.ohfl.ShowDialog((IWin32Window)this) == DialogResult.OK)
+            {
+                this.tbHost.Text = this.ohfl.Host;
+                this.tbUser.Text = this.ohfl.User;
+                this.tbPassword.Text = this.ohfl.Pass;
+                this.tbPath.Text = this.ohfl.Path;
+                if (this.connect(this.ohfl.Host, this.ohfl.User, this.ohfl.Pass))
+                {
+                    this.lastHost = this.ohfl.Host;
+                    this.lastUser = this.ohfl.User;
+                }
+            }
+        }
+
+        private void OpenHostFileDialog_Activated(object sender, EventArgs e)
+        {
+            if (lvFiles.SelectedIndices.Count > 0)
+                lvFiles.EnsureVisible(lvFiles.SelectedIndices[0]);
+        }
+
+        private void tbFile_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (tbFile.Text.Length == 1 || tbFile.Text.Length == 2)  // Don't filter 1 or 2 chars
                 return;
-            this.lastHost = this.tbHost.Text = this.ohfl.Host;
-            this.lastUser = this.tbUser.Text = this.ohfl.User;
-            this.tbPassword.Text = this.ohfl.Pass;
-            this.tbPath.Text = this.ohfl.Path;
-            if (this.connect(this.ohfl.Host, this.ohfl.User, this.ohfl.Pass))
-                this.dir();
+
+            if (oneShotTimer.Enabled)
+                return;
+
+            oneShotTimer.Start();
+        }
+
+        private void OnTimedKeyUp(Object source, ElapsedEventArgs e)
+        {
+            oneShotTimer.Enabled = false;
+            filterDelegate call = new filterDelegate(filter);
+            this.Invoke(call, new object[] { tbFile.Text });
+        }
+
+        private void lvFiles_Resize(object sender, EventArgs e)
+        {
+            lvFiles.Columns[0].Width = lvFiles.Width - lvFiles.Columns[1].Width - lvFiles.Columns[2].Width;
+
         }
     }
 }

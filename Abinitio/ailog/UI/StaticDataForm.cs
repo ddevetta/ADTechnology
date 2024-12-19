@@ -50,7 +50,7 @@ namespace ADTechnology.AbInitio.UI
       this.ClientSize = new Size(862, 346);
       this.Controls.Add((Control) this.rtbData);
       this.Icon = (Icon) componentResourceManager.GetObject("$this.Icon");
-      this.Name = nameof (StaticDataForm);
+      this.Name = "StaticDataForm";
       this.Text = "Static readonly";
       this.ResumeLayout(false);
     }

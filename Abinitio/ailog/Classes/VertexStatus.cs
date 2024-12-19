@@ -8,60 +8,63 @@ using System;
 
 namespace ADTechnology.AbInitio.Classes
 {
-  internal class VertexStatus : IComparable<VertexStatus>
-  {
-    private int running;
-    private int completed;
-
-    public int Running
+    internal class VertexStatus : IComparable<VertexStatus>
     {
-      get
-      {
-        return this.running;
-      }
-      set
-      {
-        this.running = value;
-      }
-    }
+        private int running;
+        private int completed;
 
-    public int Completed
-    {
-      get
-      {
-        return this.completed;
-      }
-      set
-      {
-        this.completed = value;
-      }
-    }
+        public int Running
+        {
+            get
+            {
+                return this.running;
+            }
+            set
+            {
+                this.running = value;
+            }
+        }
 
-    public VertexStatus()
-    {
-      this.running = this.completed = 0;
-    }
+        public int Completed
+        {
+            get
+            {
+                return this.completed;
+            }
+            set
+            {
+                this.completed = value;
+            }
+        }
 
-    public VertexStatus(int running, int completed)
-    {
-      this.running = running;
-      this.completed = completed;
-    }
+        public VertexStatus()
+        {
+            this.running = this.completed = 0;
+        }
 
-    public void Parse(string p)
-    {
-      int.TryParse(p.Substring(1, 2), out this.running);
-      int.TryParse(p.Substring(4, 2), out this.completed);
-    }
+        public VertexStatus(int running, int completed)
+        {
+            this.running = running;
+            this.completed = completed;
+        }
 
-    public override string ToString()
-    {
-      return string.Format("[{0,2:##}:{1,2:##}]", (object) this.running, (object) this.completed);
-    }
+        public void Parse(string p)
+        {
+            string[] parts = p.Split(':');
+            if (parts.Length < 2)
+                throw new InvalidFormatException("Malformed vertex status.");
+            int.TryParse(parts[0], out this.running);
+            int.TryParse(parts[1], out this.completed);
+        }
 
-    public int CompareTo(VertexStatus other)
-    {
-      return (this.completed - other.Completed) * 1024 + (this.running - other.Running);
+        public override string ToString()
+        {
+            return string.Format("[{0,2:##}:{1,2:##}]", (object)this.running, (object)this.completed);
+        }
+
+        public int CompareTo(VertexStatus other)
+        {
+            return (this.completed - other.Completed) * 1024 + (this.running - other.Running);
+        }
     }
-  }
 }

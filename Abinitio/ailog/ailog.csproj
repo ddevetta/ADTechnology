@@ -7,7 +7,7 @@
     <ProjectGuid>{225FF874-4908-47C7-B0B0-17AE09A59D59}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AssemblyName>ailog</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RootNamespace>ADTechnology.AbInitio</RootNamespace>
     <FileUpgradeFlags>
@@ -15,7 +15,9 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>D:\OneDrive\OneDrive - Sky\Projects\ailog installation\v2\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -25,10 +27,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.5827.22454</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationRevision>22467</ApplicationRevision>
+    <ApplicationVersion>2.3.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,6 +42,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,28 +52,47 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ADTechnology.AbInitio.Apps.AILog.EntryPoint</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>7664FDFD4B598569F2113E362E14BC5AE3B7B65C</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ailog_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\ailog.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Data" />
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="Graph" />
     <Reference Include="System.Drawing" />
-    <Reference Include="OpenHostFileDialog1" />
-    <Reference Include="FtpShell" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\AB_REPORT.cs" />
     <Compile Include="Classes\CompositeName.cs" />
+    <Compile Include="Classes\EmptyLogException.cs" />
     <Compile Include="Classes\ExecutionParameters.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\Flow.cs" />
     <Compile Include="Classes\FlowList.cs" />
     <Compile Include="Classes\FlowStatus.cs" />
+    <Compile Include="Classes\NotAnAILogException.cs" />
     <Compile Include="Classes\Options.cs" />
     <Compile Include="Classes\Phase.cs" />
     <Compile Include="Classes\PhaseList.cs" />
@@ -96,18 +118,48 @@
     <Compile Include="IO\LogFile.cs" />
     <Compile Include="IO\ProgressTickEventArgs.cs" />
     <Compile Include="IO\ProgressTickEventHandler.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="UI\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\ExecutionParametersForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="UI\CloseTabEventHandler.cs" />
+    <Compile Include="UI\FileBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\FileBrowserControl.Designer.cs">
+      <DependentUpon>FileBrowserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GraphContainerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\GraphContainerControl.Designer.cs">
+      <DependentUpon>GraphContainerControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\GraphForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\Images.cs" />
-    <Compile Include="UI\Mainform.cs">
+    <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ParametersBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ParametersBrowserControl.Designer.cs">
+      <DependentUpon>ParametersBrowserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\PhaseControl.Designer.cs">
+      <DependentUpon>PhaseControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ProjectControl.Designer.cs">
+      <DependentUpon>ProjectControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ProjectSource.cs" />
     <Compile Include="UI\ColorPallette.cs" />
@@ -122,32 +174,73 @@
     <Compile Include="UI\ProjectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\StaticDataForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Apps\AILog\EntryPoint.cs" />
-    <Compile Include="Properties\Resources.cs" />
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="UI\TabControlFrame.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\TabControlFrame.Designer.cs">
+      <DependentUpon>TabControlFrame.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\AboutForm.resx" />
-    <EmbeddedResource Include="UI\ExecutionParametersForm.resx" />
+    <EmbeddedResource Include="UI\FileBrowserControl.resx">
+      <DependentUpon>FileBrowserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\GraphContainerControl.resx">
+      <DependentUpon>GraphContainerControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\GraphForm.resx" />
     <EmbeddedResource Include="UI\Images.resx" />
     <EmbeddedResource Include="UI\Mainform.resx" />
     <EmbeddedResource Include="UI\OptionsForm.resx" />
+    <EmbeddedResource Include="UI\ParametersBrowserControl.resx">
+      <DependentUpon>ParametersBrowserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\PhaseControl.resx" />
     <EmbeddedResource Include="UI\ProjectControl.resx" />
-    <EmbeddedResource Include="UI\StaticDataForm.resx" />
+    <EmbeddedResource Include="UI\TabControlFrame.resx">
+      <DependentUpon>TabControlFrame.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
+      <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Apps\Graph\Graph.csproj">
+      <Project>{63e1b873-6a22-4780-bdfc-edadeeb98c29}</Project>
+      <Name>Graph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Apps\OpenHostFileDialog\OpenHostFileDialog.csproj">
+      <Project>{3a8dc49f-69b3-431f-b320-d47037de0807}</Project>
+      <Name>OpenHostFileDialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Classes\Classes.csproj">
+      <Project>{4be84ec8-1186-4330-92dd-ae3d43a21f2a}</Project>
+      <Name>Classes</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ailog_TemporaryKey.pfx" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\ailog.ico" />
+    <None Include="Resources\cancel.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

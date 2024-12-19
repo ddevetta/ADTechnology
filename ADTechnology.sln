@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Classes", "Classes\Classes.csproj", "{4BE84EC8-1186-4330-92DD-AE3D43A21F2A}"
 EndProject
@@ -16,6 +16,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaveDataTableDialog", "Apps\SaveDataTableDialog\SaveDataTableDialog.csproj", "{DDD6B49E-EF43-4BEC-BFF1-F6B6FE1B56FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testy", "Testy\Testy.csproj", "{934B0B16-C3C7-47AA-87D1-70DFAE77B784}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4BE84EC8-1186-4330-92DD-AE3D43A21F2A} = {4BE84EC8-1186-4330-92DD-AE3D43A21F2A}
+		{A6163AB9-DAFD-4ECB-8F69-AAC2FADBCF00} = {A6163AB9-DAFD-4ECB-8F69-AAC2FADBCF00}
+		{DDD6B49E-EF43-4BEC-BFF1-F6B6FE1B56FC} = {DDD6B49E-EF43-4BEC-BFF1-F6B6FE1B56FC}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apps", "Apps\Apps.csproj", "{A6163AB9-DAFD-4ECB-8F69-AAC2FADBCF00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +58,10 @@ Global
 		{934B0B16-C3C7-47AA-87D1-70DFAE77B784}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{934B0B16-C3C7-47AA-87D1-70DFAE77B784}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{934B0B16-C3C7-47AA-87D1-70DFAE77B784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6163AB9-DAFD-4ECB-8F69-AAC2FADBCF00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6163AB9-DAFD-4ECB-8F69-AAC2FADBCF00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6163AB9-DAFD-4ECB-8F69-AAC2FADBCF00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6163AB9-DAFD-4ECB-8F69-AAC2FADBCF00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

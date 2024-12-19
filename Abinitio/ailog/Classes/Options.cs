@@ -18,7 +18,6 @@ namespace ADTechnology.AbInitio.Classes
     private bool getIntervalFromReportParms = false;
     private int interval = 60;
     private bool extraRefreshAfterCompletion = true;
-    private bool mergeRevisions = false;
     private string errorvar = "AI_ERROR_FILE";
     private string summvar = "AI_SUMMARY_FILE";
 
@@ -74,19 +73,6 @@ namespace ADTechnology.AbInitio.Classes
       }
     }
 
-    public bool MergeRevisions
-    {
-      get
-      {
-        return this.mergeRevisions;
-      }
-      set
-      {
-        this.mergeRevisions = value;
-        this.OnOptionsChanged(new EventArgs());
-      }
-    }
-
     public string ErrorVariable
     {
       get
@@ -125,7 +111,6 @@ namespace ADTechnology.AbInitio.Classes
       this.getIntervalFromReportParms = info.GetBoolean(nameof (getIntervalFromReportParms));
       this.interval = info.GetInt32(nameof (interval));
       this.extraRefreshAfterCompletion = info.GetBoolean(nameof (extraRefreshAfterCompletion));
-      this.mergeRevisions = info.GetBoolean(nameof (mergeRevisions));
       this.errorvar = info.GetString(nameof (errorvar));
       this.summvar = info.GetString(nameof (summvar));
     }
@@ -171,7 +156,6 @@ namespace ADTechnology.AbInitio.Classes
       info.AddValue("getIntervalFromReportParms", this.getIntervalFromReportParms);
       info.AddValue("interval", this.interval);
       info.AddValue("extraRefreshAfterCompletion", this.extraRefreshAfterCompletion);
-      info.AddValue("mergeRevisions", this.mergeRevisions);
       info.AddValue("errorvar", (object) this.errorvar);
       info.AddValue("summvar", (object) this.summvar);
     }
