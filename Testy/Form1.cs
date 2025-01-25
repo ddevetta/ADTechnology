@@ -39,11 +39,14 @@ namespace Testy
         DataGrid[] dgData = new DataGrid[region_q];
         DataGridView[] dv = new DataGridView[region_q];
 
+        List<FileAssociationType> falist;
+
         public Form1()
         {
             InitializeComponent();
 
             this.tabControl.SelectedIndex = Properties.Settings.Default.TabSelection;
+            setAccept();
 
             ohfd = new OpenHostFileDialog();
             sdtd = new SaveDataTableDialog();
@@ -52,7 +55,7 @@ namespace Testy
 
             cbRenderAs.DataSource = ExportData.TypeFilters;
             cbRenderAs.DisplayMember = "Display";
-            cbRenderAs.ValueMember = "Value";
+            cbRenderAs.ValueMember = "DataType";
             cbRenderAs.SelectedIndex = 0;
 
             ds = CreateTestData();
@@ -135,7 +138,7 @@ namespace Testy
             label1.Text = cbRenderAs.SelectedValue.ToString();
 
             RenderDataTable rdt = new RenderDataTable();
-            rdt.Render(ds);
+            rdt.Render(ds, (ExportDataType)cbRenderAs.SelectedValue);
         }
 
         private DataSet CreateTestData()
@@ -212,6 +215,85 @@ namespace Testy
         {
             Properties.Settings.Default.TabSelection = tabControl.SelectedIndex;
             Properties.Settings.Default.Save();
+            setAccept();
+        }
+
+        private void setAccept()
+        {
+            switch (tabControl.SelectedIndex)
+            {
+                case 3:
+                    this.AcceptButton = btnFAOne;
+                    break;
+            }
+        }
+
+        private void btnFAOne_Click(object sender, EventArgs e)
+        {
+            FAError.Text = string.Empty;
+
+            FileAssociation fa = new FileAssociation();
+            FileAssociationType type = null;
+            try
+            {
+                type = fa.Find(this.tbFileExtension.Text);
+            }
+            catch (Exception ex)
+            {
+                FAError.Text = ex.Message;
+                return;
+            }
+
+            falist = new List<FileAssociationType>();
+            falist.Add(type);
+
+            dgvFA.DataSource = falist;
+
+        }
+
+        private void btnFAAll_Click(object sender, EventArgs e)
+        {
+            FAError.Text = string.Empty;
+
+            falist = new List<FileAssociationType>();
+            FileAssociation fa = new FileAssociation();
+            try
+            {
+                falist = fa.GetAssociations();
+            }
+            catch (Exception ex)
+            {
+                FAError.Text = ex.Message;
+                return;
+            }
+
+            dgvFA.DataSource = falist;
+
+        }
+
+        private void dgvFA_SelectionChanged(object sender, EventArgs e)
+        {
+            renderSubGrids();
+        }
+
+        private void renderSubGrids()
+        {
+            if (dgvFA.SelectedCells.Count == 0)
+                return;
+
+            int rowix = dgvFA.SelectedCells[0].RowIndex;
+
+            List<KeyValuePair<string, string>> singleview = new List<KeyValuePair<string, string>>();
+
+            for (int i = 0; i < dgvFA.Columns.Count; i++)
+                singleview.Add(new KeyValuePair<string, string>(dgvFA.Columns[i].Name, dgvFA.Rows[rowix].Cells[i].Value?.ToString()));
+            dgFA2.DataSource = singleview;
+            dgFA2.ClearSelection();
+
+            string extn = dgvFA.Rows[rowix].Cells[0].Value.ToString();
+            FileAssociationType fat = falist.Find(x => x.Extension == extn);
+            dgFA3.DataSource = fat.Actions;
+            dgFA3.ClearSelection();
         }
     }
 }
