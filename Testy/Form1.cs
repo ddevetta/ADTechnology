@@ -98,7 +98,7 @@ namespace Testy
         private void btnGo_Click(object sender, EventArgs e)
         {
             if (ohfd.ShowDialog(this) == DialogResult.OK)
-                this.tbName.Text = ohfd.FileName;
+                this.label1.Text = ohfd.FileName;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -171,12 +171,12 @@ namespace Testy
             DataSet ds = new DataSet("queryresults");
             //string connect = "Data Source=" + tbDb.Text + ";Persist Security Info=True;User ID=" + tbUser.Text + ";Password=" + tbPassword.Text + ";";
             string connect = "Data Source=" + tbDb.Text + ";";
-            System.Security.SecureString secpw = new System.Security.SecureString();
-            Array.ForEach(tbPassword.Text.ToCharArray(), secpw.AppendChar);
-            secpw.MakeReadOnly();
-            OracleCredential cred = new OracleCredential(tbUser.Text, secpw, (OracleDBAPrivilege)Enum.Parse(typeof(OracleDBAPrivilege), cbDBAOption.SelectedItem.ToString()));
             try
             {
+                System.Security.SecureString secpw = new System.Security.SecureString();
+                Array.ForEach(tbPassword.Text.ToCharArray(), secpw.AppendChar);
+                secpw.MakeReadOnly();
+                OracleCredential cred = new OracleCredential(tbUser.Text, secpw, (OracleDBAPrivilege)Enum.Parse(typeof(OracleDBAPrivilege), cbDBAOption.SelectedItem.ToString()));
                 OracleConnection conn = new OracleConnection(connect, cred);
                 OracleCommand cmd = conn.CreateCommand();
                 cmd.CommandText = tbQuery.Text.TrimEnd(';');

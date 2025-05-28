@@ -2,28 +2,55 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Excel = Microsoft.Office.Interop.Excel;
-//using DocumentFormat.OpenXml;
-//using DocumentFormat.OpenXml.Packaging;
 
 using ADTechnology.Classes;
-using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
 
 namespace ADTechnology.Apps
 {
+    /// <summary>
+    /// Class which will take a DataSet containing one or more DataTables, and will use <see cref="ExportData"/> to create an export file of type <see cref="ExportDataType"/>, 
+    /// then will use the installed machine file association to Open the 'rendered' file.
+    /// The file is created using the system's default Temp space.
+    /// Because the app used to open the file is invoked from the local machine, it doesn't make sense to invoke this function as a server process.
+    /// To serve a rendered file as a web page download, use <see cref="ExportData"/> directly then push the resultant stream to the HTTP response.
+    /// 
+    /// The class will attempt to find an 'OpenReadOnly' action first; this is to prevent the opened document from being 'saved' back to temp.
+    /// If no read-only action found, then it will use the default open action for the file type (extension).
+    /// </summary>
     public class RenderDataTable
     {
+        /// <summary>
+        /// Gets or sets the type of the data that is to be rendered.
+        /// </summary>
+        /// <value>
+        /// The type of the rendered data.
+        /// </value>
         public ExportDataType DataType { get; set; }
 
+        /// <summary>
+        /// Gets or sets the dataset containing the DataTable(s) to be rendered.
+        /// </summary>
+        /// <value>
+        /// The dataset.
+        /// </value>
         public DataSet Dataset { get; set; }
 
+        /// <summary>
+        /// Gets or sets the temporary file retention period (seconds).
+        /// The default is 10 seconds, just enough for the associated program to open the file
+        /// </summary>
+        /// <value>
+        /// The temporary file retention period (seconds).
+        /// </value>
         public int TempFileRetention { get; set; } = 10;
 
+        /// <summary>
+        /// Renders this instance.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">A dataset has not been supplied.</exception>
         public int Render()
         {
             if (Dataset == null)
@@ -32,18 +59,34 @@ namespace ADTechnology.Apps
             return this._render();
         }
 
+        /// <summary>
+        /// Renders the specified dataset.
+        /// </summary>
+        /// <param name="dataset">The dataset.</param>
+        /// <returns></returns>
         public int Render(DataSet dataset)
         {
             this.Dataset = dataset;
             return this.Render();
         }
 
+        /// <summary>
+        /// Renders the specified data type.
+        /// </summary>
+        /// <param name="dataType">Type of the data.</param>
+        /// <returns></returns>
         public int Render(ExportDataType dataType)
         {
             this.DataType = dataType;
             return this.Render();
         }
 
+        /// <summary>
+        /// Renders the specified dataset ti the specified type.
+        /// </summary>
+        /// <param name="dataset">The dataset.</param>
+        /// <param name="dataType">Type of the data.</param>
+        /// <returns></returns>
         public int Render(DataSet dataset, ExportDataType dataType)
         {
             this.Dataset = dataset;
@@ -77,7 +120,7 @@ namespace ADTechnology.Apps
 
             FileAssociation fa = new FileAssociation();
             FileAssociationType typ = fa.Find(Path.GetExtension(tempFile));
-
+            
             if (typ == null)
                 throw new ApplicationException("Unable to render - Generated file does not have an associated default app defined on this machine.");
 

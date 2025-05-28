@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbName = new System.Windows.Forms.TextBox();
             this.btnGo = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnRender = new System.Windows.Forms.Button();
@@ -63,7 +61,7 @@
             this.btnFAOne = new System.Windows.Forms.Button();
             this.tbFileExtension = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.userControl11 = new Testy.UserControl1();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -78,25 +76,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgFA2)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Enter your name : ";
-            // 
-            // tbName
-            // 
-            this.tbName.Location = new System.Drawing.Point(119, 9);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(165, 20);
-            this.tbName.TabIndex = 1;
-            // 
             // btnGo
             // 
-            this.btnGo.Location = new System.Drawing.Point(305, 6);
+            this.btnGo.Location = new System.Drawing.Point(27, 17);
             this.btnGo.Name = "btnGo";
             this.btnGo.Size = new System.Drawing.Size(75, 23);
             this.btnGo.TabIndex = 2;
@@ -153,8 +135,6 @@
             // 
             this.tabPage1.Controls.Add(this.btnGo);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.tbName);
-            this.tabPage1.Controls.Add(this.userControl11);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -244,7 +224,6 @@
             this.tbPassword.PasswordChar = '*';
             this.tbPassword.Size = new System.Drawing.Size(100, 20);
             this.tbPassword.TabIndex = 6;
-            this.tbPassword.Text = "capet0wn";
             // 
             // tbUser
             // 
@@ -252,7 +231,6 @@
             this.tbUser.Name = "tbUser";
             this.tbUser.Size = new System.Drawing.Size(100, 20);
             this.tbUser.TabIndex = 5;
-            this.tbUser.Text = "ISR";
             // 
             // tbDb
             // 
@@ -260,7 +238,6 @@
             this.tbDb.Name = "tbDb";
             this.tbDb.Size = new System.Drawing.Size(100, 20);
             this.tbDb.TabIndex = 4;
-            this.tbDb.Text = "DDVORA";
             // 
             // label5
             // 
@@ -458,12 +435,14 @@
             this.label7.TabIndex = 0;
             this.label7.Text = "Extension : ";
             // 
-            // userControl11
+            // label1
             // 
-            this.userControl11.Location = new System.Drawing.Point(119, 47);
-            this.userControl11.Name = "userControl11";
-            this.userControl11.Size = new System.Drawing.Size(150, 150);
-            this.userControl11.TabIndex = 3;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(108, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "(result)";
             // 
             // Form1
             // 
@@ -472,7 +451,7 @@
             this.ClientSize = new System.Drawing.Size(1246, 697);
             this.Controls.Add(this.tabControl);
             this.Name = "Form1";
-            this.Text = "My Pub";
+            this.Text = "Testy Mc Testface";
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -493,11 +472,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.Button btnGo;
-        private UserControl1 userControl11;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnRender;
         private System.Windows.Forms.ComboBox cbRenderAs;
@@ -530,6 +505,7 @@
         private System.Windows.Forms.DataGridView dgFA3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Action;
         private System.Windows.Forms.DataGridViewTextBoxColumn Command;
+        private System.Windows.Forms.Label label1;
     }
 }
 
